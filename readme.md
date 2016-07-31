@@ -6,4 +6,4 @@ Unfortunately, the company does not supply a C# dll for their API. And the Swagg
 
 So ... here's the partial implementation of the API that I needed.
 
-This client uses [Ucsb.Sa.Enterprise.ClientExtensions](https://github.com/smaglio81/Ucsb.Sa.Enterprise.ClientExtensions) to manager the ```HttpClient```'s.
+This client uses [Ucsb.Sa.Enterprise.ClientExtensions](https://github.com/smaglio81/Ucsb.Sa.Enterprise.ClientExtensions) to manage the ```HttpClient```'s.
