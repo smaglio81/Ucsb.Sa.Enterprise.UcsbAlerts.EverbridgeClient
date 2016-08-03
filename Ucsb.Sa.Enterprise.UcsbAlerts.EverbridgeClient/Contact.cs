@@ -25,19 +25,67 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 			Topics = new List<string>();
 		}
 
+		public ContactPost(ContactPost copyFrom) : base(copyFrom)
+		{
+			FirstName = copyFrom.FirstName;
+			LastName = copyFrom.LastName;
+			RecordTypeId = copyFrom.RecordTypeId;
+			RegisteredDate = copyFrom.RegisteredDate;
+			RegisteredEmail = copyFrom.RegisteredEmail;
+			ExternalId = copyFrom.ExternalId;
+			UploadProcessing = copyFrom.UploadProcessing;
+			IndividualAccountId = copyFrom.IndividualAccountId;
+			Country = copyFrom.Country;
+			SsoUserId = copyFrom.SsoUserId;
+			
+			Paths = new List<ContactPathInfoPost>();
+			//	could have used an interface ... decided against it
+			switch (copyFrom.GetType().Name)
+			{
+				case "Contact":
+					foreach (var path in ((Contact) copyFrom).Paths)
+					{
+						var p = new ContactPathInfoPost(path);
+						Paths.Add(p);
+					}
+					break;
+				default:
+					foreach (var path in copyFrom.Paths)
+					{
+						var p = new ContactPathInfoPost(path);
+						Paths.Add(p);
+					}
+					break;
+			}
+
+			Groups = new List<long>();
+			foreach(var group in copyFrom.Groups) { Groups.Add(group); }
+
+			Address = new List<ContactAddress>();
+			foreach (var addr in copyFrom.Address)
+			{
+				var a = new ContactAddress(addr);
+				Address.Add(a);
+			}
+
+			Topics = new List<string>();
+			foreach(var topic in copyFrom.Topics) { Topics.Add(topic); }
+		}
+
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public long RecordTypeId { get; set; }
 		public string RegisteredDate { get; set; }
 		public string RegisteredEmail { get; set; }
 		public string ExternalId { get; set; }
-		public virtual List<ContactPathInfoPost> Paths { get; set; }
+		public List<ContactPathInfoPost> Paths { get; set; }
 		public List<long> Groups { get; set; }
 		public List<ContactAddress> Address { get; set; }
 		public string UploadProcessing { get; set; }
 		public List<string> Topics { get; set; }
 		public string IndividualAccountId { get; set; }
 		public string Country { get; set; }
+		public string SsoUserId { get; set; }
 	}
 
 	public class Contact : ContactPost
@@ -47,7 +95,26 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 			Paths = new List<ContactPathInfo>();
 			GeoSearchAddress = new List<ContactAddress>();
 		}
-		
+
+		public Contact(Contact copyFrom) : base(copyFrom)
+		{
+			Status = copyFrom.Status;
+
+			Paths = new List<ContactPathInfo>();
+			foreach (var path in Paths)
+			{
+				var p = new ContactPathInfo(path);
+				Paths.Add(p);
+			}
+
+			GeoSearchAddress = new List<ContactAddress>();
+			foreach (var address in copyFrom.GeoSearchAddress)
+			{
+				var a = new ContactAddress(address);
+				GeoSearchAddress.Add(a);
+			}
+		}
+
 		public List<ContactPathInfo> Paths { get; set; }
 		public List<ContactAddress> GeoSearchAddress { get; set; }
 		public string Status { get; set; }
@@ -56,6 +123,16 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 
 	public class ContactPathInfoPost
 	{
+		public ContactPathInfoPost() {}
+
+		public ContactPathInfoPost(ContactPathInfoPost copyFrom)
+		{
+			PathId = copyFrom.PathId;
+			Value = copyFrom.Value;
+			CountryCode = copyFrom.CountryCode;
+			WaitTime = copyFrom.WaitTime;
+		}
+
 		public long PathId { get; set; }
 		public string Value { get; set; }
 		public string CountryCode { get; set; }
@@ -64,6 +141,15 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 
 	public class ContactPathInfo : ContactPathInfoPost
 	{
+		public ContactPathInfo() {}
+
+		public ContactPathInfo(ContactPathInfo copyFrom) : base(copyFrom)
+		{
+			Priority = copyFrom.Priority;
+			SystemRequirement = copyFrom.SystemRequirement;
+			PhoneExt = copyFrom.PhoneExt;
+		}
+
 		public int Priority { get; set; }
 		public string SystemRequirement { get; set; }
 		public string PhoneExt { get; set; }
@@ -71,6 +157,22 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 
 	public class ContactAddress
 	{
+		public ContactAddress() {}
+
+		public ContactAddress(ContactAddress copyFrom)
+		{
+			StreetAddress = copyFrom.StreetAddress;
+			PostalCode = copyFrom.PostalCode;
+			LocationId = copyFrom.LocationId;
+			City = copyFrom.City;
+			State = copyFrom.State;
+			Country = copyFrom.Country;
+			LocationName = copyFrom.LocationName;
+			Source = copyFrom.Source;
+
+			GisLocation = new ContactGisLocation(copyFrom.GisLocation);
+		}
+
 		public string StreetAddress { get; set; }
 		public string PostalCode { get; set; }
 		public long LocationId { get; set; }
@@ -84,6 +186,14 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 
 	public class ContactGisLocation
 	{
+		public ContactGisLocation() {}
+
+		public ContactGisLocation(ContactGisLocation copyFrom)
+		{
+			Lon = copyFrom.Lon;
+			Lat = copyFrom.Lat;
+		}
+
 		public Double Lon { get; set; }
 		public Double Lat { get; set; }
 	}

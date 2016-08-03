@@ -98,6 +98,21 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 			return (EverbridgeUpdateResponse)HandleUnsuccessfulResponse(response);
 		}
 
+		public EverbridgeUpdateResponse Put(long id, object putModel)
+		{
+			var url = string.Format("{0}/{1}", Name, id);
+			var response = EverbridgeExecute(url: url, method: HttpMethod.Put, data: putModel);
+
+			if (response.IsSuccessStatusCode)
+			{
+				var json = response.ResponseAsString();
+				EverbridgeUpdateResponse result = HttpResponseMessageExtensions.DeserializeHttpResponse<EverbridgeUpdateResponse>(json, "json");
+				return result;
+			}
+
+			return (EverbridgeUpdateResponse)HandleUnsuccessfulResponse(response);
+		}
+
 		public EverbridgeUpdateResponse Delete(long id)
 		{
 			var url = string.Format("{0}/{1}", Name, id);
