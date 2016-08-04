@@ -23,6 +23,7 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 			Groups = new List<long>();
 			Address = new List<ContactAddress>();
 			Topics = new List<string>();
+			ContactAttributes = new List<ContactContactAttribute>();
 		}
 
 		public ContactPost(ContactPost copyFrom) : base(copyFrom)
@@ -59,7 +60,7 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 			}
 
 			Groups = new List<long>();
-			foreach(var group in copyFrom.Groups) { Groups.Add(group); }
+			Groups.AddRange(copyFrom.Groups);
 
 			Address = new List<ContactAddress>();
 			foreach (var addr in copyFrom.Address)
@@ -69,7 +70,14 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 			}
 
 			Topics = new List<string>();
-			foreach(var topic in copyFrom.Topics) { Topics.Add(topic); }
+			Topics.AddRange(copyFrom.Topics);
+
+			ContactAttributes = new List<ContactContactAttribute>();
+			foreach (var attr in copyFrom.ContactAttributes)
+			{
+				var a = new ContactContactAttribute(attr);
+				ContactAttributes.Add(a);
+			}
 		}
 
 		public string FirstName { get; set; }
@@ -86,6 +94,7 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 		public string IndividualAccountId { get; set; }
 		public string Country { get; set; }
 		public string SsoUserId { get; set; }
+		public List<ContactContactAttribute> ContactAttributes { get; set; }
 	}
 
 	public class Contact : ContactPost
@@ -196,6 +205,77 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 
 		public Double Lon { get; set; }
 		public Double Lat { get; set; }
+	}
+
+	public class ContactContactAttribute
+	{
+
+		public static ContactContactAttribute NonCampusIndividualProd =
+			new ContactContactAttribute()
+			{
+				OrgAttrId = 1323816294816030,
+				Name = "Non-Campus Individual?",
+				Values = new List<string>() {"Yes"}
+			};
+
+		public static ContactContactAttribute CampusOnlyIndividualProd =
+			new ContactContactAttribute()
+			{
+				OrgAttrId = 1323816294816030,
+				Name = "Non-Campus Individual?",
+				Values = new List<string>() { "No" }
+			};
+
+		public static ContactContactAttribute NonCampusIndividualTest =
+			new ContactContactAttribute()
+			{
+				OrgAttrId = 1323816294816031,
+				Name = "Non-Campus Individual?",
+				Values = new List<string>() { "Yes" }
+			};
+
+		public static ContactContactAttribute CampusOnlyIndividualTest =
+			new ContactContactAttribute()
+			{
+				OrgAttrId = 1323816294816031,
+				Name = "Non-Campus Individual?",
+				Values = new List<string>() { "No" }
+			};
+
+		public static ContactContactAttribute NonCampusIndividual
+		{
+			get
+			{
+				if (EverbridgeHttpClientManager.IsProd) { return NonCampusIndividualProd; }
+				return NonCampusIndividualTest;
+			}
+		}
+
+		public static ContactContactAttribute CampusOnlyIndividual
+		{
+			get
+			{
+				if (EverbridgeHttpClientManager.IsProd) { return CampusOnlyIndividualProd; }
+				return CampusOnlyIndividualTest;
+			}
+		}
+
+
+
+		public ContactContactAttribute() {}
+
+		public ContactContactAttribute(ContactContactAttribute copyFrom)
+		{
+			OrgAttrId = copyFrom.OrgAttrId;
+			Name = copyFrom.Name;
+
+			Values = new List<string>();
+			Values.AddRange(copyFrom.Values);
+		}
+
+		public List<string> Values { get; set; }
+		public long OrgAttrId { get; set; }
+		public string Name { get; set; }
 	}
 
 }

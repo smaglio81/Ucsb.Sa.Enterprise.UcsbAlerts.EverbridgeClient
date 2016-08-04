@@ -77,6 +77,10 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 						PathId = ContactPath.AlertEmail,
 						Value = email
 					}
+				},
+				ContactAttributes = new List<ContactContactAttribute>()
+				{
+					ContactContactAttribute.NonCampusIndividual
 				}
 			};
 
