@@ -62,7 +62,7 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 		{
 			var contact = new ContactPost()
 			{
-				RecordTypeId = ContactRecordType.Student, // student
+				RecordTypeId = ContactRecordType.Student,
 				FirstName = firstName,
 				LastName = lastName,
 				Country = "US",
@@ -81,6 +81,36 @@ namespace Ucsb.Sa.Enterprise.UcsbAlerts.EverbridgeClient
 				ContactAttributes = new List<ContactContactAttribute>()
 				{
 					ContactContactAttribute.NonCampusIndividual
+				}
+			};
+
+			var result = Post(postModel: contact);
+			return result.Id;
+		}
+
+		public long AddEmployee(string firstName, string lastName, string email, string ucsbCampusId)
+		{
+			var contact = new ContactPost()
+			{
+				RecordTypeId = ContactRecordType.Employee,
+				FirstName = firstName,
+				LastName = lastName,
+				Country = "US",
+				ExternalId = ucsbCampusId,
+				RegisteredEmail = email,
+				SsoUserId = ucsbCampusId,
+				Paths = new List<ContactPathInfoPost>()
+				{
+					new ContactPathInfoPost()
+					{
+						WaitTime = 0,
+						PathId = ContactPath.AlertEmail,
+						Value = email
+					}
+				},
+				ContactAttributes = new List<ContactContactAttribute>()
+				{
+					ContactContactAttribute.CampusOnlyIndividual
 				}
 			};
 
